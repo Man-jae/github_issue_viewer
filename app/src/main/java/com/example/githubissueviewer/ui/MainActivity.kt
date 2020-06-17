@@ -8,7 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.githubissueviewer.PopUpDialog
 import com.example.githubissueviewer.R
-import com.example.githubissueviewer.model.Issue
+import com.example.githubissueviewer.data.Issue
 import com.example.githubissueviewer.server.ServerManager
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.CoroutineScope
@@ -18,7 +18,6 @@ import kotlinx.coroutines.launch
 class MainActivity : AppCompatActivity() {
     companion object {
         private const val URL = "https://thingsflow.com/ko/home"
-        private const val EXTRA_ISSUE = "extra_issue"
     }
 
     private var issueAdapter: IssueAdapter? = null

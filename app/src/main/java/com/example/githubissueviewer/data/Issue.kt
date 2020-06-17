@@ -1,4 +1,4 @@
-package com.example.githubissueviewer.model
+package com.example.githubissueviewer.data
 
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName

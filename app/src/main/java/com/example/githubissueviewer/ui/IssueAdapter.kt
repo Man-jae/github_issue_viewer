@@ -9,7 +9,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.githubissueviewer.R
-import com.example.githubissueviewer.model.Issue
+import com.example.githubissueviewer.data.Issue
 import kotlinx.android.synthetic.main.item_issue.view.*
 
 class IssueAdapter(

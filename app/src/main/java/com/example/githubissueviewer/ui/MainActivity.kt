@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.githubissueviewer.PopUpDialog
 import com.example.githubissueviewer.R
 import com.example.githubissueviewer.model.IssueModel
 import com.example.githubissueviewer.server.ServerManager
@@ -21,7 +22,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         initIssueList()
-        setIssueList()
+        setIssueList("google", "dagger")
+        text_repo_title.setOnClickListener(onClickListener)
     }
 
     private fun initIssueList() {
@@ -32,9 +34,10 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun setIssueList() {
+    private fun setIssueList(org: String, repo: String) {
+        issueList.clear()
         CoroutineScope(Dispatchers.Main).launch {
-            val response = ServerManager.getIssueList("google", "dagger")
+            val response = ServerManager.getIssueList(org, repo)
             if (response.isSuccessful) {
                 response.body()?.let { body ->
                     body.forEachIndexed { index, issue ->
@@ -51,6 +54,16 @@ class MainActivity : AppCompatActivity() {
 
     private val onClickListener: View.OnClickListener = View.OnClickListener {
         when (it.id) {
+            R.id.text_repo_title -> {
+                PopUpDialog.input(
+                    context = this,
+                    listener = object : PopUpDialog.ReturnValueListener {
+                        override fun onReturnValue(org: String, repo: String) {
+                            setIssueList(org, repo)
+                        }
+                    }
+                )
+            }
             R.id.text_issue -> {
                 // TODO : 화면 이동
             }

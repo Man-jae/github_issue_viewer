@@ -3,6 +3,7 @@ package com.example.githubissueviewer.ui
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -47,20 +48,23 @@ class MainActivity : AppCompatActivity() {
     private fun setIssueList(org: String, repo: String) {
         issueList.clear()
         CoroutineScope(Dispatchers.Main).launch {
-            val response = ServerManager.getIssueList(org, repo)
-            if (response.isSuccessful) {
-                response.body()?.let { body ->
-                    body.forEachIndexed { index, issue ->
-                        if (index == 4) issueList.add(null)
-                        issueList.add(issue)
+            try {
+                val response = ServerManager.getIssueList(org, repo)
+                if (response.isSuccessful) {
+                    response.body()?.let { body ->
+                        body.forEachIndexed { index, issue ->
+                            if (index == 4) issueList.add(null)
+                            issueList.add(issue)
+                        }
+                        issueAdapter?.setItems(issueList)
+                        updateRepoTitle(org, repo)
                     }
-                    issueAdapter?.setItems(issueList)
-                    updateRepoTitle(org, repo)
                 }
-            } else {
-                // TODO : Error
+            } catch (e: Exception) {
+                Log.i("LOG", e.toString())
             }
         }
+
     }
 
     private val onClickListener: View.OnClickListener = View.OnClickListener {

@@ -79,7 +79,7 @@ class MainActivity : AppCompatActivity() {
             R.id.text_issue -> {
                 (it.tag as Issue).let { issue ->
                     Intent(this, DetailActivity::class.java).apply {
-                        putExtra(EXTRA_ISSUE, issue)
+                        putExtra("EXTRA_ISSUE", issue)
                         startActivity(this)
                     }
                 }

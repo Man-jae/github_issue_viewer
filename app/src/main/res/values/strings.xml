@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">GithubIssueViewer</string>
+    <string name="title">%s / %s</string>
+    <string name="issue">#%d : %s</string>
 </resources>

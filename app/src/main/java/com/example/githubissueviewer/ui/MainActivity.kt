@@ -34,6 +34,10 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun updateRepoTitle(org: String, repo: String) {
+        text_repo_title.text = getString(R.string.title, org, repo)
+    }
+
     private fun setIssueList(org: String, repo: String) {
         issueList.clear()
         CoroutineScope(Dispatchers.Main).launch {
@@ -45,6 +49,7 @@ class MainActivity : AppCompatActivity() {
                         issueList.add(issue)
                     }
                     issueAdapter?.setItems(issueList)
+                    updateRepoTitle(org, repo)
                 }
             } else {
                 // TODO : Error

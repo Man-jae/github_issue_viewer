@@ -9,12 +9,12 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.githubissueviewer.R
-import com.example.githubissueviewer.model.IssueModel
+import com.example.githubissueviewer.model.Issue
 import kotlinx.android.synthetic.main.item_issue.view.*
 
 class IssueAdapter(
     private val context: Context,
-    private var items: List<IssueModel?>,
+    private var items: List<Issue?>,
     private val onClickListener: View.OnClickListener
 ) : RecyclerView.Adapter<IssueAdapter.ViewHolder>() {
 
@@ -54,7 +54,7 @@ class IssueAdapter(
         }
     }
 
-    fun setItems(issueList: ArrayList<IssueModel?>) {
+    fun setItems(issueList: ArrayList<Issue?>) {
         items = issueList
         notifyDataSetChanged()
     }

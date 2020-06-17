@@ -7,7 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.githubissueviewer.PopUpDialog
 import com.example.githubissueviewer.R
-import com.example.githubissueviewer.model.IssueModel
+import com.example.githubissueviewer.model.Issue
 import com.example.githubissueviewer.server.ServerManager
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.CoroutineScope
@@ -16,7 +16,7 @@ import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
     private var issueAdapter: IssueAdapter? = null
-    private var issueList: ArrayList<IssueModel?> = arrayListOf()
+    private var issueList: ArrayList<Issue?> = arrayListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -71,7 +71,7 @@ class MainActivity : AppCompatActivity() {
                 )
             }
             R.id.text_issue -> {
-                (it.tag as IssueModel).let { issue ->
+                (it.tag as Issue).let { issue ->
                     Intent(this, DetailActivity::class.java).apply {
                         putExtra("EXTRA_ISSUE", issue.number)
                         startActivity(this)

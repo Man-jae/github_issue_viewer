@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
     private var issueAdapter: IssueAdapter? = null
-    private var issueList: ArrayList<IssueModel> = arrayListOf()
+    private var issueList: ArrayList<IssueModel?> = arrayListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,7 +37,10 @@ class MainActivity : AppCompatActivity() {
             val response = ServerManager.getIssueList("google", "dagger")
             if (response.isSuccessful) {
                 response.body()?.let { body ->
-                    body.forEach { issue -> issueList.add(issue) }
+                    body.forEachIndexed { index, issue ->
+                        if (index == 4) issueList.add(null)
+                        issueList.add(issue)
+                    }
                     issueAdapter?.setItems(issueList)
                 }
             } else {
@@ -48,7 +51,11 @@ class MainActivity : AppCompatActivity() {
 
     private val onClickListener: View.OnClickListener = View.OnClickListener {
         when (it.id) {
-            R.id.layout_parent -> {
+            R.id.text_issue -> {
+                // TODO : 화면 이동
+            }
+
+            R.id.view_logo -> {
                 // TODO : 화면 이동
             }
         }

@@ -4,16 +4,17 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.githubissueviewer.R
 import com.example.githubissueviewer.model.IssueModel
 import kotlinx.android.synthetic.main.item_issue.view.*
 
 class IssueAdapter(
     private val context: Context,
-    private var items: List<IssueModel>,
+    private var items: List<IssueModel?>,
     private val onClickListener: View.OnClickListener
 ) : RecyclerView.Adapter<IssueAdapter.ViewHolder>() {
 
@@ -30,22 +31,37 @@ class IssueAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item: IssueModel = items[position]
+        val item = items[position]
 
         holder.apply {
-            issue.text = context.getString(R.string.issue, item.number, item.title)
-            layout.setOnClickListener(onClickListener)
+            viewLogo.visibility = View.INVISIBLE
+            textIssue.visibility = View.VISIBLE
+
+            item?.let {
+                textIssue.tag = item
+                textIssue.text = context.getString(R.string.issue, item.number, item.title)
+                textIssue.setOnClickListener(onClickListener)
+            } ?: also {
+                Glide.with(context)
+                    .load("https://s3.ap-northeast-2.amazonaws.com/hellobot-kr-test/image/main_logo.png")
+                    .into(viewLogo)
+
+                viewLogo.tag = item
+                viewLogo.visibility = View.VISIBLE
+                textIssue.visibility = View.INVISIBLE
+                viewLogo.setOnClickListener(onClickListener)
+            }
         }
     }
 
-    fun setItems(issueList: ArrayList<IssueModel>) {
+    fun setItems(issueList: ArrayList<IssueModel?>) {
         items = issueList
         notifyDataSetChanged()
     }
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        var layout: ConstraintLayout = view.layout_parent
-        var issue: TextView = view.text_issue
+        var textIssue: TextView = view.text_issue
+        var viewLogo: ImageView = view.view_logo
     }
 }
 

@@ -1,6 +1,7 @@
 package com.example.githubissueviewer.ui
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -15,6 +16,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
+    companion object {
+        private const val URL = "https://thingsflow.com/ko/home"
+        private const val EXTRA_ISSUE = "extra_issue"
+    }
+
     private var issueAdapter: IssueAdapter? = null
     private var issueList: ArrayList<Issue?> = arrayListOf()
 
@@ -73,14 +79,16 @@ class MainActivity : AppCompatActivity() {
             R.id.text_issue -> {
                 (it.tag as Issue).let { issue ->
                     Intent(this, DetailActivity::class.java).apply {
-                        putExtra("EXTRA_ISSUE", issue)
+                        putExtra(EXTRA_ISSUE, issue)
                         startActivity(this)
                     }
                 }
             }
 
             R.id.view_logo -> {
-                // TODO : 화면 이동
+                Intent(Intent.ACTION_VIEW, Uri.parse(URL)).apply {
+                    startActivity(this)
+                }
             }
         }
     }

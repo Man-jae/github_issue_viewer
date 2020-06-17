@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">AndroidAssignment</string>
+    <string name="title">%s / %s</string>
+    <string name="issue">#%d : %s</string>
+</resources>

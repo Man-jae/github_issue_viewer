@@ -1,5 +1,6 @@
 package com.example.githubissueviewer.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -70,7 +71,12 @@ class MainActivity : AppCompatActivity() {
                 )
             }
             R.id.text_issue -> {
-                // TODO : 화면 이동
+                (it.tag as IssueModel).let { issue ->
+                    Intent(this, DetailActivity::class.java).apply {
+                        putExtra("EXTRA_ISSUE", issue.number)
+                        startActivity(this)
+                    }
+                }
             }
 
             R.id.view_logo -> {

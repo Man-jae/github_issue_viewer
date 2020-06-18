@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.githubissueviewer.PopUpDialog
 import com.example.githubissueviewer.R
+import com.example.githubissueviewer.data.AppDatabase
 import com.example.githubissueviewer.data.Issue
 import com.example.githubissueviewer.server.ServerManager
 import kotlinx.android.synthetic.main.activity_main.*
@@ -27,11 +28,13 @@ class MainActivity : AppCompatActivity() {
 
     private var issueAdapter: IssueAdapter? = null
     private var issueList: ArrayList<Issue?> = arrayListOf()
+    private lateinit var db: AppDatabase
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        db = AppDatabase.getInstance(this)
         initIssueList()
         setIssueList("google", "dagger")
         text_repo_title.setOnClickListener(onClickListener)

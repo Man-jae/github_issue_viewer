@@ -17,4 +17,14 @@ data class Issue(
     @Embedded val user: User,
     @ColumnInfo(name = "repo_id") val repoId: Int = 0
 ) {
+    companion object {
+        fun convert(issue: IssueResponse): Issue {
+            return Issue(
+                number = issue.number,
+                title = issue.title,
+                body = issue.body,
+                user = User.convert(issue.user)
+            )
+        }
+    }
 }

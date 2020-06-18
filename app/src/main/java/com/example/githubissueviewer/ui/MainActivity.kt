@@ -9,12 +9,14 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.githubissueviewer.PopUpDialog
 import com.example.githubissueviewer.R
 import com.example.githubissueviewer.data.AppDatabase
 import com.example.githubissueviewer.data.Issue
+import com.example.githubissueviewer.data.Repository
 import com.example.githubissueviewer.server.ServerManager
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.CoroutineScope
@@ -85,25 +87,31 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun setIssueList(org: String, repo: String) {
+    private fun setIssueToRoom(repo: Repository, issues: ArrayList<Issue>) {
+        CoroutineScope(Dispatchers.IO).launch {
+            db.repoDao().delete()
+            db.repoDao().create(repo)
+            db.issueDao().create(issues)
+            getIssueToRoom()
+        }
+    }
+
+    private fun getIssueToServer(org: String, repo: String) {
         issueList.clear()
-        CoroutineScope(Dispatchers.Main).launch {
+        CoroutineScope(Dispatchers.IO).launch {
             try {
                 val response = ServerManager.getIssueList(org, repo)
                 if (response.isSuccessful) {
                     response.body()?.let { body ->
-                        body.forEachIndexed { index, issue ->
-                            if (index == 4) issueList.add(null)
-                            issueList.add(issue)
-                        }
-                        issueAdapter?.setItems(issueList)
+                        val issues = arrayListOf<Issue>()
+                        body.forEach { issue -> issues.add(Issue.convert(issue)) }
+                        setIssueToRoom(Repository(org = org, repo = repo), issues)
                     }
                 }
             } catch (e: Exception) {
-                Log.i("LOG", e.toString())
+                Log.e(":::::", "ERROR : $e")
             }
         }
-
     }
 
     private val onClickListener: View.OnClickListener = View.OnClickListener {
@@ -113,7 +121,15 @@ class MainActivity : AppCompatActivity() {
                     context = this,
                     listener = object : PopUpDialog.ReturnValueListener {
                         override fun onReturnValue(org: String, repo: String) {
-                            setIssueList(org, repo)
+                            if (checkNetwork()) {
+                                getIssueToServer(org, repo)
+                            } else {
+                                Toast.makeText(
+                                    this@MainActivity,
+                                    getString(R.string.network_error),
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
                         }
                     }
                 )
@@ -121,7 +137,7 @@ class MainActivity : AppCompatActivity() {
             R.id.text_issue -> {
                 (it.tag as Issue).let { issue ->
                     Intent(this, DetailActivity::class.java).apply {
-                        putExtra("EXTRA_ISSUE", issue)
+                        putExtra("EXTRA_ISSUE", issue.number)
                         startActivity(this)
                     }
                 }

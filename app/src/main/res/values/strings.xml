@@ -3,4 +3,5 @@
     <string name="title">%s / %s</string>
     <string name="issue">#%d : %s</string>
     <string name="repo_empty">이 곳을 눌러 repo 이름을 설정하세요.</string>
+    <string name="network_error">네트워크가 연결되지 않았습니다.</string>
 </resources>

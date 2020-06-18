@@ -1,11 +1,14 @@
 package com.example.githubissueviewer.data
 
-import androidx.room.ColumnInfo
-import androidx.room.Embedded
-import androidx.room.Entity
-import androidx.room.PrimaryKey
+import androidx.room.*
 
-@Entity
+@Entity(
+    foreignKeys = [ForeignKey(
+        entity = Repository::class,
+        parentColumns = arrayOf("id"),
+        childColumns = arrayOf("repo_id")
+    )]
+)
 data class Issue(
     @PrimaryKey
     var number: Int,

@@ -1,12 +1,14 @@
 package com.example.githubissueviewer.data
 
 import androidx.room.*
+import androidx.room.ForeignKey.CASCADE
 
 @Entity(
     foreignKeys = [ForeignKey(
         entity = Repository::class,
         parentColumns = arrayOf("id"),
-        childColumns = arrayOf("repo_id")
+        childColumns = arrayOf("repo_id"),
+        onDelete = CASCADE
     )]
 )
 data class Issue(

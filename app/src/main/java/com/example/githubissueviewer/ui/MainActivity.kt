@@ -20,6 +20,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class MainActivity : AppCompatActivity() {
     companion object {
@@ -36,7 +37,7 @@ class MainActivity : AppCompatActivity() {
 
         db = AppDatabase.getInstance(this)
         initIssueList()
-        setIssueList("google", "dagger")
+        getIssueToRoom()
         text_repo_title.setOnClickListener(onClickListener)
     }
 
@@ -48,8 +49,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun updateRepoTitle(org: String, repo: String) {
-        text_repo_title.text = getString(R.string.title, org, repo)
     private fun checkNetwork(): Boolean {
         val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -65,6 +64,25 @@ class MainActivity : AppCompatActivity() {
             return nwInfo.isConnected
         }
     }
+
+    private fun getIssueToRoom() {
+        issueList.clear()
+        CoroutineScope(Dispatchers.IO).launch {
+            val repository = db.repoDao().read()
+            val issues = db.issueDao().readAll()
+            withContext(Dispatchers.Main) {
+                repository?.let { repo ->
+                    issues?.forEachIndexed { index, issue ->
+                        if (index == 4) issueList.add(null)
+                        issueList.add(issue)
+                    }
+                    issueAdapter?.setItems(issueList)
+                    text_repo_title.text = getString(R.string.title, repo.org, repo.repo)
+                } ?: also {
+                    text_repo_title.text = getString(R.string.repo_empty)
+                }
+            }
+        }
     }
 
     private fun setIssueList(org: String, repo: String) {
@@ -79,7 +97,6 @@ class MainActivity : AppCompatActivity() {
                             issueList.add(issue)
                         }
                         issueAdapter?.setItems(issueList)
-                        updateRepoTitle(org, repo)
                     }
                 }
             } catch (e: Exception) {

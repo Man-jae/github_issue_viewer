@@ -5,7 +5,7 @@ import androidx.room.*
 
 @Dao
 interface IssueDao {
-    @Query("SELECT * FROM Issue")
+    @Query("SELECT * FROM Issue ORDER BY number DESC")
     fun readAll(): List<Issue>?
 
     @Query("SELECT * FROM Issue WHERE number = :number")

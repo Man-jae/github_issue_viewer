@@ -1,17 +1,32 @@
 package com.example.githubissueviewer.data
 
-import android.os.Parcelable
-import com.google.gson.annotations.SerializedName
-import kotlinx.android.parcel.Parcelize
+import androidx.room.*
+import androidx.room.ForeignKey.CASCADE
 
-@Parcelize
+@Entity(
+    foreignKeys = [ForeignKey(
+        entity = Repository::class,
+        parentColumns = arrayOf("id"),
+        childColumns = arrayOf("repo_id"),
+        onDelete = CASCADE
+    )]
+)
 data class Issue(
-    @SerializedName("number")
-    val number: Int,
-    @SerializedName("title")
-    val title: String?,
-    @SerializedName("body")
-    val body: String?,
-    @SerializedName("user")
-    val user: User
-) : Parcelable
+    @PrimaryKey
+    var number: Int,
+    var title: String?,
+    var body: String?,
+    @Embedded val user: User,
+    @ColumnInfo(name = "repo_id") val repoId: Int = 0
+) {
+    companion object {
+        fun convert(issue: IssueResponse): Issue {
+            return Issue(
+                number = issue.number,
+                title = issue.title,
+                body = issue.body,
+                user = User.convert(issue.user)
+            )
+        }
+    }
+}

@@ -17,6 +17,9 @@ class IssueAdapter(
     private var items: List<Issue?>,
     private val onClickListener: View.OnClickListener
 ) : RecyclerView.Adapter<IssueAdapter.ViewHolder>() {
+    companion object {
+        private const val LOGO_URL = "https://s3.ap-northeast-2.amazonaws.com/hellobot-kr-test/image/main_logo.png"
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
@@ -43,7 +46,7 @@ class IssueAdapter(
                 textIssue.setOnClickListener(onClickListener)
             } ?: also {
                 Glide.with(context)
-                    .load("https://s3.ap-northeast-2.amazonaws.com/hellobot-kr-test/image/main_logo.png")
+                    .load(LOGO_URL)
                     .into(viewLogo)
 
                 viewLogo.tag = item
